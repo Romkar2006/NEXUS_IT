@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --surface: 240 10% 5%;
+    --primary: 0 0% 98%;
+    --secondary: 240 5% 64.9%;
+    --accent: 262.1 83.3% 57.8%; /* Purple */
+    --border: 240 3.7% 15.9%;
+  }
+
+  body {
+    @apply antialiased selection:bg-indigo-500/30 selection:text-white;
+    background-color: #030303;
+    color: hsl(var(--primary));
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .mesh-gradient {
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(263, 83%, 58%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(199, 89%, 48%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(330, 81%, 60%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(263, 83%, 58%, 0.08) 0px, transparent 50%);
+  }
+
+  .glass-card {
+    background: rgba(15, 15, 20, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    @apply rounded-2xl shadow-2xl;
+  }
+
+  /* Reference Image Button Styles */
+  .btn-vibrant-purple {
+    @apply bg-[#6366f1] text-white font-semibold rounded-lg px-5 py-2.5 transition-all duration-300 hover:bg-[#4f46e5] hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-center gap-2;
+  }
+
+  .btn-outline-indigo {
+    @apply bg-[#1e1b4b] text-[#c4b5fd] border border-[#4338ca] font-semibold rounded-lg px-5 py-2.5 transition-all duration-300 hover:bg-[#2e1065] flex items-center gap-2;
+  }
+
+  .btn-outline-amber {
+    @apply bg-[#451a03] text-[#fbbf24] border border-[#92400e] font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:bg-[#78350f] flex items-center gap-2;
+  }
+
+  .btn-outline-red {
+    @apply bg-[#450a0a] text-[#f87171] border border-[#991b1b] font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:bg-[#7f1d1d] flex items-center gap-2;
+  }
+
+  /* Badge Styles from Ref Image */
+  .badge-pill {
+    @apply px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 border border-white/10;
+  }
+  
+  .badge-active { @apply bg-[#064e3b]/50 text-[#34d399] border-[#059669]/30; }
+  .badge-inactive { @apply bg-[#7f1d1d]/30 text-[#f87171] border-[#b91c1c]/30; }
+  .badge-pending { @apply bg-[#78350f]/30 text-[#fbbf24] border-[#d97706]/30; }
+
+  .dot-ping {
+    @apply w-1.5 h-1.5 rounded-full relative;
+  }
+  .dot-ping::after {
+    content: '';
+    @apply absolute inset-0 rounded-full animate-ping opacity-75 bg-current;
+  }
+
+  /* Form tech style */
+  .input-premium {
+    @apply bg-white/[0.03] border border-white/10 text-white rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-4 focus:ring-accent/10 transition-all duration-300 placeholder:text-white/20;
+    &:focus {
+      border-color: hsla(var(--accent), 0.6);
+    }
+  }
+
+  /* Navigation Sidebar */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium;
+  }
+  .sidebar-link-active {
+    @apply bg-white/[0.08] text-white border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)];
+  }
+  .sidebar-link-inactive {
+    @apply text-white/40 hover:text-white/80 hover:bg-white/[0.04];
+  }
+
+  /* Animations */
+  .reveal-card {
+    animation: revealCard 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  
+  @keyframes revealCard {
+    0% { opacity: 0; transform: scale(0.96) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes avatar-mesh {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animated-mesh-bg {
+    background: linear-gradient(-45deg, #1e1b4b, #312e81, #1e1b4b, #4338ca);
+    background-size: 400% 400%;
+    animation: avatar-mesh 15s ease infinite;
+  }
+
+  @keyframes breathing-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(99,102,241,0.2); }
+    50% { box-shadow: 0 0 15px rgba(99,102,241,0.5); }
+  }
+
+  .glow-active {
+    animation: breathing-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes scanner-line {
+    0% { transform: translateX(-100%); opacity: 0; }
+    10% { opacity: 0.1; }
+    40%, 60% { opacity: 0.2; }
+    90% { opacity: 0.1; }
+    100% { transform: translateX(800%); opacity: 0; }
+  }
+
+  .scan-line {
+    @apply absolute inset-0 w-1/4 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    animation: scanner-line 12s infinite linear;
+  }
+}
