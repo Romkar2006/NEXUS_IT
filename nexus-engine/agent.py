@@ -185,22 +185,54 @@ async def main():
     
     while True:
         try:
-            prompt = input(f"{YELLOW}🎙️ MISSION READY > {RESET}")
-            if not prompt or prompt.lower() in ['exit', 'quit']: break
+            prompt = input(f"{YELLOW}🎙️ MISSION READY > {RESET}").strip()
+            
+            # Skip empty entries (prevents accidental enters or weird paste issues)
+            if not prompt: 
+                continue
+                
+            if prompt.lower() in ['exit', 'quit']: 
+                break
+                
             command = await ask_brain(prompt)
-            if not command: continue
+            if not command: 
+                continue
+
             async with async_playwright() as p:
                 print(f"{MAGENTA}🚀 Deployment initiated...{RESET}")
+                # Use a single profile to avoid unnecessary cleanup issues
                 browser = await p.chromium.launch(headless=False, slow_mo=700)
-                page = await browser.new_page(viewport={'width': 1366, 'height': 768})
+                context = await browser.new_context(viewport={'width': 1366, 'height': 768})
+                page = await context.new_page()
+                
                 try:
-                    if command.get('task') == 'security_audit': await security_audit_task(page)
-                    elif command.get('task') == 'reset_password': await reset_password_task(page, **command)
-                    elif command.get('task') == 'create_user': await create_user_task(page, **command)
-                except Exception as e: print(f"{RED}❌ [ABORTED] {e}{RESET}")
-                await asyncio.sleep(4)
-                await browser.close()
-        except (EOFError, KeyboardInterrupt): break
+                    task_type = command.get('task')
+                    if task_type == 'security_audit': 
+                        await security_audit_task(page)
+                    elif task_type == 'reset_password': 
+                        await reset_password_task(page, **command)
+                    elif task_type == 'create_user': 
+                        await create_user_task(page, **command)
+                    else:
+                        print(f"{YELLOW}⚠️  [WARNING] Unrecognized mission type: {task_type}{RESET}")
+                except Exception as e: 
+                    print(f"{RED}❌ [ABORTED] {e}{RESET}")
+                finally:
+                    await asyncio.sleep(2)
+                    await browser.close()
+                    
+        except EOFError:
+            break
+        except KeyboardInterrupt:
+            print(f"\n{CYAN}👋 Nexus IT Agent signing off.{RESET}")
+            break
+        except Exception as e:
+            print(f"{RED}💥 [CRITICAL ERROR] {e}{RESET}")
+            print(f"{CYAN}🔄 Attempting to stabilize system...{RESET}")
+            await asyncio.sleep(1)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
